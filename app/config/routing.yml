@@ -1,0 +1,5 @@
+kosssi_example_doctrine_events:
+    resource: "@kosssiExampleDoctrineEventsBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
