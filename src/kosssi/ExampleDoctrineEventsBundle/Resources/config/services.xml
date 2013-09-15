@@ -4,17 +4,16 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <!--
     <parameters>
-        <parameter key="kosssi_example_doctrine_events.example.class">kosssi\ExampleDoctrineEventsBundle\Example</parameter>
+        <parameter key="kosssi_example_doctrine_events.ant_repository.class">kosssi\ExampleDoctrineEventsBundle\Repository\AntRepository</parameter>
     </parameters>
 
     <services>
-        <service id="kosssi_example_doctrine_events.example" class="%kosssi_example_doctrine_events.example.class%">
-            <argument type="service" id="service_id" />
-            <argument>plain_value</argument>
-            <argument>%parameter_name%</argument>
+        <service id="kosssi_example_doctrine_events.ant_repository"
+                 class="%kosssi_example_doctrine_events.ant_repository.class%"
+                 factory-service="doctrine.orm.default_entity_manager"
+                 factory-method="getRepository">
+            <argument>kosssi\ExampleDoctrineEventsBundle\Entity\Ant</argument>
         </service>
     </services>
-    -->
 </container>
