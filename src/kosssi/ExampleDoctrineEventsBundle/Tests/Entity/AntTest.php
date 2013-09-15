@@ -35,4 +35,76 @@ class AntTest extends WebTestCase
         }
         $em->flush();
     }
+
+    public function testSetCreatedAtUpdatedAtPrePersist()
+    {
+        $client = static::createClient();
+        $container = $client->getContainer();
+
+        $ant = new Ant();
+        $ant->setCaste(Ant::CASTE_QUEEN);
+        $ant->setColor(Ant::COLOR_BLACK);
+
+        /** @var \Doctrine\ORM\EntityManager $em */
+        $em = $container->get('doctrine.orm.default_entity_manager');
+        $em->persist($ant);
+        $em->flush();
+
+        $this->assertNotNull($ant->getCreatedAt());
+        $this->assertNotNull($ant->getUpdatedAt());
+
+        $em->remove($ant);
+        $em->flush();
+    }
+
+    public function testSetUpdatedAtPreUpdate()
+    {
+        $client = static::createClient();
+        $container = $client->getContainer();
+
+        $ant = new Ant();
+        $ant->setCaste(Ant::CASTE_QUEEN);
+        $ant->setColor(Ant::COLOR_BLACK);
+
+        /** @var \Doctrine\ORM\EntityManager $em */
+        $em = $container->get('doctrine.orm.default_entity_manager');
+        $em->persist($ant);
+        $em->flush();
+
+        $updatedAt = $ant->getUpdatedAt();
+        sleep(1);
+
+        $ant->setColor(Ant::COLOR_RED);
+        $em->persist($ant);
+        $em->flush();
+
+        $this->assertNotEquals($updatedAt, $ant->getUpdatedAt());
+
+        $em->remove($ant);
+        $em->flush();
+    }
+
+    public function testCasteRules()
+    {
+        $client = static::createClient();
+        $container = $client->getContainer();
+
+        $ant = new Ant();
+        $ant->setCaste(Ant::CASTE_QUEEN);
+        $ant->setColor(Ant::COLOR_BLACK);
+
+        /** @var \Doctrine\ORM\EntityManager $em */
+        $em = $container->get('doctrine.orm.default_entity_manager');
+        $em->persist($ant);
+        $em->flush();
+
+        $ant->setCaste(Ant::CASTE_WORKER);
+        $em->persist($ant);
+        $em->flush();
+
+        $this->assertNotEquals(Ant::CASTE_WORKER, $ant->getCaste());
+
+        $em->remove($ant);
+        $em->flush();
+    }
 }

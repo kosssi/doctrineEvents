@@ -2,6 +2,7 @@
 
 namespace kosssi\ExampleDoctrineEventsBundle\Entity;
 
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="kosssi\ExampleDoctrineEventsBundle\Repository\AntRepository")
+ * @ORM\HasLifecycleCallbacks
  */
 class Ant
 {
@@ -57,6 +59,36 @@ class Ant
      * @ORM\Column(name="caste", type="integer")
      */
     private $caste;
+
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtAndUpdatedAtPrePersist()
+    {
+        $now = new \Datetime();
+
+        $this->createdAt = $now;
+        $this->updatedAt = $now;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAtPreUpdate(PreUpdateEventArgs $event)
+    {
+        $this->updatedAt = new \Datetime();
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function casteRules(PreUpdateEventArgs $event)
+    {
+        if ($event->hasChangedField('caste')) {
+            $this->caste = $event->getOldValue('caste');
+        }
+    }
 
 
     /**
