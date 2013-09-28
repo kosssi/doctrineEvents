@@ -5,15 +5,50 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
+        <!-- Manager -->
+        <parameter key="kosssi_snake_size_manager.class">kosssi\ExampleDoctrineEventsBundle\Manager\SnakeSizeManager</parameter>
+        <!-- Repository -->
         <parameter key="kosssi_example_doctrine_events.ant_repository.class">kosssi\ExampleDoctrineEventsBundle\Repository\AntRepository</parameter>
+        <parameter key="kosssi_example_doctrine_events.snake_repository.class">kosssi\ExampleDoctrineEventsBundle\Repository\SnakeRepository</parameter>
+        <!-- Listener -->
+        <parameter key="kosssi_listener_snake_created_at_updated_at.class">kosssi\ExampleDoctrineEventsBundle\Listener\SnakeCreatedAtUpdatedAtListener</parameter>
+        <parameter key="kosssi_listener_snake_size.class">kosssi\ExampleDoctrineEventsBundle\Listener\SnakeSizeListener</parameter>
+        <!-- ListenerResolver -->
+        <parameter key="kosssi_listener_resolver.class">kosssi\ExampleDoctrineEventsBundle\ListenerResolver\ListenerResolver</parameter>
     </parameters>
 
     <services>
+        <!-- Manager -->
+        <service id="kosssi_snake_size_manager"
+                 class="%kosssi_snake_size_manager.class%">
+        </service>
+        <!-- Repository -->
         <service id="kosssi_example_doctrine_events.ant_repository"
                  class="%kosssi_example_doctrine_events.ant_repository.class%"
                  factory-service="doctrine.orm.default_entity_manager"
                  factory-method="getRepository">
             <argument>kosssi\ExampleDoctrineEventsBundle\Entity\Ant</argument>
+        </service>
+        <service id="kosssi_example_doctrine_events.snake_repository"
+                 class="%kosssi_example_doctrine_events.snake_repository.class%"
+                 factory-service="doctrine.orm.default_entity_manager"
+                 factory-method="getRepository">
+            <argument>kosssi\ExampleDoctrineEventsBundle\Entity\Snake</argument>
+        </service>
+
+        <!-- Listener -->
+        <service id="kosssi_listener_snake_created_at_updated_at"
+                 class="%kosssi_listener_snake_created_at_updated_at.class%">
+        </service>
+        <service id="kosssi_listener_snake_size"
+                 class="%kosssi_listener_snake_size.class%">
+            <argument type="service" id="kosssi_snake_size_manager"/>
+        </service>
+
+        <!-- Listener Resolver -->
+        <service id="kosssi_listener_resolver"
+                 class="%kosssi_listener_resolver.class%">
+            <argument type="service" id="service_container"/>
         </service>
     </services>
 </container>

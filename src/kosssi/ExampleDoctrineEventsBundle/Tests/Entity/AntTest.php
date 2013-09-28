@@ -30,9 +30,7 @@ class AntTest extends WebTestCase
 
         $this->assertTrue(count($ants) > 0);
 
-        foreach ($ants as $ant) {
-            $em->remove($ant);
-        }
+        $em->remove($ant);
         $em->flush();
     }
 
